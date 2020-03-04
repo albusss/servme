@@ -91,6 +91,7 @@ $app->configure('app');
 
  $app->register(App\Providers\AppServiceProvider::class);
  $app->register(App\Providers\AuthServiceProvider::class);
+$app->register(App\Providers\RepositoryServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
 
 $app->register(LaravelDoctrine\ORM\DoctrineServiceProvider::class);
@@ -107,9 +108,9 @@ $app->register(LaravelDoctrine\Migrations\MigrationsServiceProvider::class);
 */
 
 $app->router->group([
-    'namespace' => 'App\Http\Controllers',
+    'namespace' => 'App\Http\Controllers\V1',
 ], function ($router) {
-    require __DIR__.'/../routes/web.php';
+    require __DIR__ . '/../routes/v1.php';
 });
 
 return $app;
