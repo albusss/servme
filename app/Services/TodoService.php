@@ -8,6 +8,7 @@ use App\Entities\Todo;
 use App\Repositories\TodoRepositoryInterface;
 use DateTime;
 use Illuminate\Contracts\Auth\Guard;
+use KamranAhmed\Faulty\Exceptions\HttpException;
 use KamranAhmed\Faulty\Exceptions\NotFoundException;
 
 final class TodoService implements TodoServiceInterface
@@ -55,9 +56,42 @@ final class TodoService implements TodoServiceInterface
     /**
      * {@inheritdoc}
      */
+    public function delete(string $id): void
+    {
+        $todo = $this->findTodoOrFail($id);
+
+        try {
+            $this->todoRepository->remove($todo);
+        } catch (\Exception $exception) {
+            throw new HttpException('Can not remove entity', 500, "Entity id [{$id}]");
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function show(string $id): Todo
     {
         return $this->findTodoOrFail($id);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function update(array $data, string $id): Todo
+    {
+        $todo = $this->findTodoOrFail($id);
+
+        $deadline = isset($data['deadline']) ? new DateTime($data['deadline']) : $todo->getDeadline();
+        $todo
+            ->setName($input['name'] ?? $todo->getName())
+            ->setDescription($input['description'] ?? $todo->getDescription())
+            ->setDeadline($deadline)
+            ->setUpdatedAt(new DateTime());
+
+        $this->todoRepository->saveAndFlush($todo);
+
+        return $todo;
     }
 
     /**

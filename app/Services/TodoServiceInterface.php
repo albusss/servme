@@ -53,6 +53,18 @@ interface TodoServiceInterface
     public function create(array $data, Category $category): Todo;
 
     /**
+     * Delete entity.
+     *
+     * @param string $id
+     *
+     * @return void
+     *
+     * @throws \KamranAhmed\Faulty\Exceptions\HttpException
+     * @throws \KamranAhmed\Faulty\Exceptions\NotFoundException
+     */
+    public function delete(string $id): void;
+
+    /**
      * Show entity.
      *
      * @param string $id
@@ -62,4 +74,19 @@ interface TodoServiceInterface
      * @throws \KamranAhmed\Faulty\Exceptions\NotFoundException
      */
     public function show(string $id): Todo;
+
+    /**
+     * Update Entity.
+     *
+     * @param mixed[] $data
+     * @param string $id
+     *
+     * @return \App\Entities\Todo
+     *
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \KamranAhmed\Faulty\Exceptions\NotFoundException
+     * @throws \Exception
+     */
+    public function update(array $data, string $id): Todo;
 }
