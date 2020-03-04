@@ -50,6 +50,14 @@ class Todo extends AbstractEntity
     protected $status;
 
     /**
+     * @var \App\Entities\User
+     *
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="todos")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     */
+    protected $user;
+
+    /**
      * @return \App\Entities\Category|null
      */
     public function getCategory(): ?Category
@@ -87,6 +95,14 @@ class Todo extends AbstractEntity
     public function getStatus(): ?string
     {
         return $this->status;
+    }
+
+    /**
+     * @return \App\Entities\User|null
+     */
+    public function getUser(): ?User
+    {
+        return $this->user;
     }
 
     /**
@@ -145,6 +161,18 @@ class Todo extends AbstractEntity
     public function setStatus(?string $status = null): self
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    /**
+     * @param \App\Entities\User|null $user
+     *
+     * @return self
+     */
+    public function setUser(?User $user = null): self
+    {
+        $this->user = $user;
 
         return $this;
     }

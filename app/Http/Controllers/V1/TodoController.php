@@ -6,6 +6,7 @@ namespace App\Http\Controllers\V1;
 use App\Http\Controllers\Controller;
 use App\Services\CategoryServiceInterface;
 use App\Services\TodoServiceInterface;
+use Illuminate\Contracts\Validation\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -33,12 +34,27 @@ final class TodoController extends Controller
     ];
 
     /**
+     * @var \App\Services\TodoServiceInterface
+     */
+    private $todoService;
+
+    /**
+     * TodoController constructor.
+     *
+     * @param \App\Services\TodoServiceInterface $todoService
+     * @param \Illuminate\Contracts\Validation\Factory $validator
+     */
+    public function __construct(TodoServiceInterface $todoService, Factory $validator)
+    {
+        parent::__construct($validator);
+
+        $this->todoService = $todoService;
+    }
+
+    /**
      * Create new entity.
      *
      * @param \Illuminate\Http\Request $request
-     *
-     * @param \App\Services\TodoServiceInterface $todoService
-     *
      * @param \App\Services\CategoryServiceInterface $categoryService
      *
      * @return \Illuminate\Http\Response
@@ -47,15 +63,26 @@ final class TodoController extends Controller
      */
     public function create(
         Request $request,
-        TodoServiceInterface $todoService,
         CategoryServiceInterface $categoryService
     ): Response {
         $this->validateRequest($request->input(), self::CREATE_RULES);
 
         $category = $categoryService->retrieveOrcreate($request->input('category'));
 
-        $todo = $todoService->create($request->input(), $category);
+        $todo = $this->todoService->create($request->input(), $category);
 
         return new Response($todo->toArray(), 201);
+    }
+
+    /**
+     * Show entity.
+     *
+     * @param string $id
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function show(string $id): Response
+    {
+        return new Response($this->todoService->show($id)->toArray());
     }
 }

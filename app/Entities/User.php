@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace App\Entities;
 
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -71,6 +73,39 @@ class User extends AbstractEntity
     protected $password;
 
     /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\OneToMany(targetEntity="Todo", mappedBy="user")
+     */
+    protected $todos;
+
+    /**
+     * Todo constructor.
+     *
+     * @throws \Exception
+     */
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->todos = new ArrayCollection();
+    }
+
+    /**
+     * @param \App\Entities\Todo $todo
+     *
+     * @return \App\Entities\User
+     */
+    public function addTodo(Todo $todo): self
+    {
+        if ($this->todos->contains($todo) === false) {
+            $this->todos->add($todo);
+        }
+
+        return $this;
+    }
+
+    /**
      * @return string|null
      */
     public function getApiKey(): ?string
@@ -132,6 +167,18 @@ class User extends AbstractEntity
     public function getPassword(): ?string
     {
         return $this->password;
+    }
+
+    /**
+     * @param \Doctrine\Common\Collections\Collection $todos
+     *
+     * @return self
+     */
+    public function getTodos(?Collection $todos = null): self
+    {
+        $this->todos = $todos;
+
+        return $this;
     }
 
     /**

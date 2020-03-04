@@ -38,5 +38,28 @@ interface TodoServiceInterface
      */
     public const STATUS_SNOOZED = 'snoozed';
 
+    /**
+     * Create new entity.
+     *
+     * @param mixed[] $data
+     * @param \App\Entities\Category $category
+     *
+     * @return \App\Entities\Todo
+     *
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Exception
+     */
     public function create(array $data, Category $category): Todo;
+
+    /**
+     * Show entity.
+     *
+     * @param string $id
+     *
+     * @return \App\Entities\Todo
+     *
+     * @throws \KamranAhmed\Faulty\Exceptions\NotFoundException
+     */
+    public function show(string $id): Todo;
 }
