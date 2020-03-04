@@ -3,17 +3,16 @@ declare(strict_types=1);
 
 namespace App\Entities;
 
-use App\Entities\Traits\IdentifiableTrait;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity()
- * @ORM\Table(name="categories")
+ * @ORM\Table(name="categories", uniqueConstraints={
+ *     @ORM\UniqueConstraint(name="name", columns={"name"})
+ * })
  */
-class Category
+class Category extends AbstractEntity
 {
-    use IdentifiableTrait;
-
     /**
      * @var string
      *

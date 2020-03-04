@@ -3,22 +3,20 @@ declare(strict_types=1);
 
 namespace App\Entities;
 
-use App\Entities\Traits\IdentifiableTrait;
 use DateTime;
+use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity()
  * @ORM\Table(name="todos")
  */
-class Todo
+class Todo extends AbstractEntity
 {
-    use IdentifiableTrait;
-
     /**
      * @var \App\Entities\Category
      *
-     * @ORM\ManyToOne(targetEntity="Category")
+     * @ORM\ManyToOne(targetEntity="Category", cascade={"persist"})
      * @ORM\JoinColumn(name="category_id", referencedColumnName="id")
      */
     protected $category;
@@ -28,7 +26,7 @@ class Todo
      *
      * @ORM\Column(name="date_time", type="datetime", nullable=false)
      */
-    protected $dateTime;
+    protected $deadline;
 
     /**
      * @var string
@@ -45,9 +43,9 @@ class Todo
     protected $name;
 
     /**
-     * @var int
+     * @var string
      *
-     * @ORM\Column(name="status", type="integer", length=1, nullable=false)
+     * @ORM\Column(name="status", type="string", nullable=false)
      */
     protected $status;
 
@@ -62,9 +60,9 @@ class Todo
     /**
      * @return DateTime|null
      */
-    public function getDateTime(): ?DateTime
+    public function getDeadline(): ?DateTime
     {
-        return $this->dateTime;
+        return $this->deadline;
     }
 
     /**
@@ -84,9 +82,9 @@ class Todo
     }
 
     /**
-     * @return int|null
+     * @return string|null
      */
-    public function getStatus(): ?int
+    public function getStatus(): ?string
     {
         return $this->status;
     }
@@ -104,13 +102,13 @@ class Todo
     }
 
     /**
-     * @param DateTime|null $dateTime
+     * @param DateTime|null $deadline
      *
      * @return self
      */
-    public function setDateTime(?DateTime $dateTime = null): self
+    public function setDeadline(?DateTime $deadline = null): self
     {
-        $this->dateTime = $dateTime;
+        $this->deadline = $deadline;
 
         return $this;
     }
@@ -140,14 +138,33 @@ class Todo
     }
 
     /**
-     * @param int|null $status
+     * @param string|null $status
      *
      * @return self
      */
-    public function setStatus(?int $status = null): self
+    public function setStatus(?string $status = null): self
     {
         $this->status = $status;
 
         return $this;
+    }
+
+    /**
+     * Transforms to array.
+     *
+     * @return mixed[]
+     */
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'description' => $this->description,
+            'category' => $this->category->getName(),
+            'status' => $this->status,
+            'deadline' => $this->deadline->format(DateTimeInterface::ATOM),
+            'createdAt' => $this->createdAt->format(DateTimeInterface::ATOM),
+            'updatedAt' => $this->updatedAt->format(DateTimeInterface::ATOM),
+        ];
     }
 }

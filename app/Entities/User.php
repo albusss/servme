@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Entities;
 
-use App\Entities\Traits\IdentifiableTrait;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -13,10 +12,8 @@ use Doctrine\ORM\Mapping as ORM;
  *      @ORM\UniqueConstraint(name="email", columns={"email"}),
  * })
  */
-class User
+class User extends AbstractEntity
 {
-    use IdentifiableTrait;
-
     /**
      * @var string
      *
