@@ -73,6 +73,22 @@ final class TodoController extends Controller
     }
 
     /**
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return \Illuminate\Http\Response
+     *
+     * @throws \KamranAhmed\Faulty\Exceptions\BadRequestException
+     */
+    public function list(Request $request): Response
+    {
+        $this->validateRequest($request->input(), $this->getListRules());
+
+        $result = $this->todoService->list($request->input());
+
+        return new Response($result);
+    }
+
+    /**
      * Show entity.
      *
      * @param string $id
@@ -120,6 +136,20 @@ final class TodoController extends Controller
             'description' => 'sometimes|required|string|max:255',
             'deadline' => 'required|date|after:now',
             'category' => 'required|string',
+        ];
+    }
+
+    /**
+     * List rules.
+     *
+     * @return string[]
+     */
+    private function getListRules(): array
+    {
+        return [
+            'category' => 'sometimes|required|string|exists:categories,name',
+            'deadline' => 'sometimes|required|date|after:now',
+            'status' => 'sometimes|required|string|in:' . \implode(',', TodoServiceInterface::ALL_STATUSES),
         ];
     }
 

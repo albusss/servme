@@ -5,6 +5,7 @@ namespace App\Services;
 
 use App\Entities\Category;
 use App\Entities\Todo;
+use App\Repositories\CategoryRepositoryInterface;
 use App\Repositories\TodoRepositoryInterface;
 use DateTime;
 use Illuminate\Contracts\Auth\Guard;
@@ -13,6 +14,11 @@ use KamranAhmed\Faulty\Exceptions\NotFoundException;
 
 final class TodoService implements TodoServiceInterface
 {
+    /**
+     * @var \App\Repositories\CategoryRepositoryInterface
+     */
+    private $categoryRepository;
+
     /**
      * @var \App\Entities\User
      */
@@ -28,11 +34,16 @@ final class TodoService implements TodoServiceInterface
      *
      * @param \App\Repositories\TodoRepositoryInterface $todoRepository
      * @param \Illuminate\Contracts\Auth\Guard $auth
+     * @param \App\Repositories\CategoryRepositoryInterface $categoryRepository
      */
-    public function __construct(TodoRepositoryInterface $todoRepository, Guard $auth)
-    {
+    public function __construct(
+        TodoRepositoryInterface $todoRepository,
+        Guard $auth,
+        CategoryRepositoryInterface $categoryRepository
+    ) {
         $this->todoRepository = $todoRepository;
         $this->currentUser = $auth->user();
+        $this->categoryRepository = $categoryRepository;
     }
 
     /**
@@ -65,6 +76,25 @@ final class TodoService implements TodoServiceInterface
         } catch (\Exception $exception) {
             throw new HttpException('Can not remove entity', 500, "Entity id [{$id}]");
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function list(array $criteries): array
+    {
+        if (isset($criteries['category'])) {
+            $criteries['category'] = $this->categoryRepository->findOneBy(['name' => $criteries['category']]);
+        }
+
+        $result = $this->todoRepository->findByCriteria($criteries);
+
+        $response = [];
+        foreach ($result as $item) {
+            $response[] = $item->toArray();
+        }
+
+        return $response;
     }
 
     /**

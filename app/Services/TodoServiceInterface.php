@@ -64,6 +64,8 @@ interface TodoServiceInterface
      */
     public function delete(string $id): void;
 
+    public function list(array $criteries): array;
+
     /**
      * Show entity.
      *
