@@ -1,15 +1,15 @@
-##Hi SerVme!
+## Hi SerVme!
  
 Have a good day)
 
-###Installation guide
+### Installation guide
 
 * `git clone git@github.com:albusss/servme.git`
 * `composer install`
 * `docker-compose build && docker-compose up`
 * `docker-compose run php php artisan doctrine:migrations:migrate`
 
-###Testing
+### Testing
 * `docker-compose run php /vendor/bin/phpunit tests/`
 
 I wrote only a few tests due to the fact that I had very little time.
