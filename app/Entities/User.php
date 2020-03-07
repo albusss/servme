@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Entities;
 
 use DateTime;
+use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -59,9 +60,9 @@ class User extends AbstractEntity
     protected $lastName;
 
     /**
-     * @var int
+     * @var string
      *
-     * @ORM\Column(name="mobile_number", type="integer", nullable=false)
+     * @ORM\Column(name="mobile_number", type="string", nullable=false)
      */
     protected $mobileNumber;
 
@@ -154,9 +155,9 @@ class User extends AbstractEntity
     }
 
     /**
-     * @return int|null
+     * @return string|null
      */
-    public function getMobileNumber(): ?int
+    public function getMobileNumber(): ?string
     {
         return $this->mobileNumber;
     }
@@ -254,11 +255,11 @@ class User extends AbstractEntity
     }
 
     /**
-     * @param int|null $mobileNumber
+     * @param string|null $mobileNumber
      *
      * @return self
      */
-    public function setMobileNumber(?int $mobileNumber = null): self
+    public function setMobileNumber(?string $mobileNumber = null): self
     {
         $this->mobileNumber = $mobileNumber;
 
@@ -275,5 +276,25 @@ class User extends AbstractEntity
         $this->password = $password;
 
         return $this;
+    }
+
+    /**
+     * Transforms to array.
+     *
+     * @return mixed[]
+     */
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'firstname' => $this->firstName,
+            'lastname' => $this->lastName,
+            'mobile' => $this->mobileNumber,
+            'gender' => $this->gender,
+            'birthday' => $this->birthday,
+            'email' => $this->email,
+            'createdAt' => $this->createdAt->format(DateTimeInterface::ATOM),
+            'updatedAt' => $this->updatedAt->format(DateTimeInterface::ATOM),
+        ];
     }
 }
