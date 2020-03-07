@@ -1,8 +1,7 @@
 <?php
-
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 
-use App\User;
+use App\Entities\Category;
 use Faker\Generator as Faker;
 
 /*
@@ -16,9 +15,9 @@ use Faker\Generator as Faker;
 |
 */
 
-$factory->define(User::class, function (Faker $faker) {
+$factory->define(Category::class, function (Faker $faker) {
     return [
-        'name' => $faker->name,
-        'email' => $faker->email,
+        'name' => $faker->word,
+        'createdAt' => $faker->dateTime,
     ];
 });
