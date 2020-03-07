@@ -5,12 +5,13 @@ Have a good day)
 ### Installation guide
 
 * `git clone git@github.com:albusss/servme.git`
+* `cd <projectName>`
 * `composer install`
-* `docker-compose build && docker-compose up`
+* `docker-compose build && docker-compose up -d`
 * `docker-compose run php php artisan doctrine:migrations:migrate`
 
 ### Testing
-* `docker-compose run php /vendor/bin/phpunit tests/`
+* `docker-compose run php ./vendor/bin/phpunit tests/`
 
 I wrote only a few tests due to the fact that I had very little time.
 But i have written thousands of tests (unit, integration, function) and i can show another my projects
