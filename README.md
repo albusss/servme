@@ -7,6 +7,7 @@ Have a good day)
 * `git clone git@github.com:albusss/servme.git`
 * `cd <projectName>`
 * `composer install`
+* `cp .env.example .env`
 * `docker-compose build && docker-compose up -d`
 * `docker-compose run php php artisan doctrine:migrations:migrate`
 
