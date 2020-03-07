@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Entities;
 
-use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -51,8 +50,8 @@ class Category extends AbstractEntity
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'createdAt' => $this->createdAt->format(DateTimeInterface::ATOM),
-            'updatedAt' => $this->updatedAt->format(DateTimeInterface::ATOM),
+            'createdAt' => $this->createdAt,
+            'updatedAt' => $this->updatedAt,
         ];
     }
 }

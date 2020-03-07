@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace App\Entities;
 
 use DateTime;
-use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -191,9 +190,9 @@ class Todo extends AbstractEntity
             'category' => $this->category->getId(),
             'user' => $this->user->getId(),
             'status' => $this->status,
-            'deadline' => $this->deadline->format(DateTimeInterface::ATOM),
-            'createdAt' => $this->createdAt->format(DateTimeInterface::ATOM),
-            'updatedAt' => $this->updatedAt->format(DateTimeInterface::ATOM),
+            'deadline' => $this->deadline,
+            'createdAt' => $this->createdAt,
+            'updatedAt' => $this->updatedAt,
         ];
     }
 }

@@ -68,6 +68,14 @@ final class CategoryService implements CategoryServiceInterface
      */
     public function list(array $criteries): array
     {
+        $categories = $this->categoryRepository->findAll();
+
+        $response = [];
+        foreach ($categories as $item) {
+            $response[] = $item->toArray();
+        }
+
+        return $response;
     }
 
     /**

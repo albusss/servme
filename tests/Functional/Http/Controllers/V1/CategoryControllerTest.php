@@ -32,9 +32,9 @@ final class CategoryControllerTest extends TestCase
 
         $this->json('POST', '/api/v1/todos', $data, $headers);
 
+        $this->assertResponseStatus(201);
         $this->seeJsonContains([
             'name' => 'name',
-            'deadline' => $deadline->format(\DateTimeInterface::ATOM),
             'category' => $category->getId(),
         ]);
     }

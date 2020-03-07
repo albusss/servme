@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace App\Entities;
 
 use DateTime;
-use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -293,8 +292,8 @@ class User extends AbstractEntity
             'gender' => $this->gender,
             'birthday' => $this->birthday,
             'email' => $this->email,
-            'createdAt' => $this->createdAt->format(DateTimeInterface::ATOM),
-            'updatedAt' => $this->updatedAt->format(DateTimeInterface::ATOM),
+            'createdAt' => $this->createdAt,
+            'updatedAt' => $this->updatedAt,
         ];
     }
 }
