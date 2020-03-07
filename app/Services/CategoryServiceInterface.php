@@ -8,11 +8,62 @@ use App\Entities\Category;
 interface CategoryServiceInterface
 {
     /**
-     * Retrieve or create Category.
+     * Create new Category.
      *
-     * @param string $categoryName
+     * @param mixed[] $data
      *
      * @return \App\Entities\Category
+     *
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \Exception
      */
-    public function retrieveOrcreate(string $categoryName): Category;
+    public function create(array $data): Category;
+
+    /**
+     * Delete Category.
+     *
+     * @param string $id
+     *
+     * @return void
+     *
+     * @throws \KamranAhmed\Faulty\Exceptions\HttpException
+     * @throws \KamranAhmed\Faulty\Exceptions\NotFoundException
+     */
+    public function delete(string $id): void;
+
+    /**
+     * List Categories
+     *
+     * @param mixed[] $criteries
+     *
+     * @return \App\Entities\Category[]
+     */
+    public function list(array $criteries): array;
+
+    /**
+     * Show Category.
+     *
+     * @param string $id
+     *
+     * @return \App\Entities\Category
+     *
+     * @throws \KamranAhmed\Faulty\Exceptions\NotFoundException
+     */
+    public function show(string $id): Category;
+
+    /**
+     * Update Category.
+     *
+     * @param mixed[] $data
+     * @param string $id
+     *
+     * @return \App\Entities\Category
+     *
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws \KamranAhmed\Faulty\Exceptions\NotFoundException
+     * @throws \Exception
+     */
+    public function update(array $data, string $id): Category;
 }

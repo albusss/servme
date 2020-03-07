@@ -11,22 +11,21 @@
 |
 */
 
-$router->get('login/', 'UsersController@login');
+$router->post('login/', 'UsersController@login');
+$router->post('register/', 'UsersController@register');
 $router->get('logout/', 'UsersController@logout');
-$router->get('register/', 'UsersController@register');
 
-//$router->group(['prefix' => 'api/v1/', 'middleware' => 'auth'], static function ($router) {
-//    $router->post('todos/', 'TodoController@create');
-//    $router->get('todos/', 'TodoController@list');
-//    $router->get('todos/{id}/', 'TodoController@show');
-//    $router->patch('todos/{id}/', 'TodoController@update');
-//    $router->delete('todos/{id}/', 'TodoController@delete');
-//});
+$router->group(['prefix' => 'api/v1/', 'middleware' => 'auth'], static function ($router) {
 
-$router->group(['prefix' => 'api/v1/'], static function ($router) {
     $router->post('todos/', 'TodoController@create');
     $router->get('todos/', 'TodoController@list');
     $router->get('todos/{id}/', 'TodoController@show');
     $router->patch('todos/{id}/', 'TodoController@update');
     $router->delete('todos/{id}/', 'TodoController@delete');
+
+    $router->post('categories/', 'CategoryController@create');
+    $router->get('categories/', 'CategoryController@list');
+    $router->get('categories/{id}/', 'CategoryController@show');
+    $router->patch('categories/{id}/', 'CategoryController@update');
+    $router->delete('categories/{id}/', 'CategoryController@delete');
 });
