@@ -1,24 +1,120 @@
-# Lumen PHP Framework
+##Hi SerVme! 
+###Installation guide
+* `git clone git@github.com:albusss/servme.git`
+* `composer install`
+* `docker-compose build && docker-compose up`
+* `docker-compose run php php artisan doctrine:migrations:migrate`
 
-[![Build Status](https://travis-ci.org/laravel/lumen-framework.svg)](https://travis-ci.org/laravel/lumen-framework)
-[![Total Downloads](https://poser.pugx.org/laravel/lumen-framework/d/total.svg)](https://packagist.org/packages/laravel/lumen-framework)
-[![Latest Stable Version](https://poser.pugx.org/laravel/lumen-framework/v/stable.svg)](https://packagist.org/packages/laravel/lumen-framework)
-[![License](https://poser.pugx.org/laravel/lumen-framework/license.svg)](https://packagist.org/packages/laravel/lumen-framework)
+### Usage
+*  Register a new User
+```php
+Request: POST /register
+Body:
+{
+	"firstname": "name",
+	"lastname": "lastname",
+	"mobile": "19286577781",
+	"gender": "male",
+	"birthday": "06-03-2020 20:20:20",
+	"email": "test@mail.com",
+	"password": "12345678"
+}
 
-Laravel Lumen is a stunningly fast PHP micro-framework for building web applications with expressive, elegant syntax. We believe development must be an enjoyable, creative experience to be truly fulfilling. Lumen attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as routing, database abstraction, queueing, and caching.
+Response: 201 Created
+```
+*  Authenticate User
+```php
+Request: POST /login
+Body:
+{
+	"email": "test@mail.wu",
+	"password": "12345678"
+}
 
-## Official Documentation
+Response: 200 OK
 
-Documentation for the framework can be found on the [Lumen website](https://lumen.laravel.com/docs).
+{
+    "email": "test@mail.wu",
+    "apiKey": "ZDhIT2NpSTQ0TkFVQkJISDRLV1JJQ2gwOVpTTjhIRkFaVVY5cFVqOQ=="
+}
+```
+* Create Category
+```php
+Request: POST /api/v1/categories
+Header: Authorization Bearer <apiToken>
+Body:
+{
+	"name": "category1"
+}
 
-## Contributing
+Response: 201 Created
+```
+* Create Todo
+```php
+Request: POST /api/v1/todos
+Header: Authorization Bearer <apiToken>
+Body:
+{
+	"name": "todo1",
+	"deadline": "06-03-2022 20:20:20",
+	"category": "category1"
+}
 
-Thank you for considering contributing to Lumen! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Response: 201 Created
+```
+* Get Todo
+```php
+Request: GET /api/v1/todos/{id}
+Header: Authorization Bearer <apiToken>
 
-## Security Vulnerabilities
+Response: 200 OK
+{
+    "id": 4,
+    "name": "todo1",
+    "description": null,
+    "category": 3,
+    "user": 1,
+    "status": "new",
+    "deadline": "2025-03-06T20:20:20+00:00",
+    "createdAt": "2020-03-07T12:02:35+00:00",
+    "updatedAt": "2020-03-07T12:02:35+00:00"
+}
+```
+* Delete Todo
+```php
+Request: DELETE /api/v1/todos/{id}
+Header: Authorization Bearer <apiToken>
 
-If you discover a security vulnerability within Lumen, please send an e-mail to Taylor Otwell at taylor@laravel.com. All security vulnerabilities will be promptly addressed.
+Response: 204 No content
+```
+* List Todo
+```php
+Request: GET /api/v1/todos
+Header: Authorization Bearer <apiToken>
+Body:
+{
+    //available filters
+	"category": "category1",
+	"status": "new",
+	"period": "all"
+}
 
-## License
+Response: 200 OK
+```
+* Update Todo
+```php
+Request: PATCH /api/v1/todos/{id}
+Header: Authorization Bearer <apiToken>
+Body:
+{
+    //available fields
+	"name": "name2",
+	"description": "description",
+	"status": "completed",
+	"deadline": "06-03-2029 20:20:20",
+	"category": "category1"
+}
 
-The Lumen framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Response: 200 OK
+```
+
