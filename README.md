@@ -1,6 +1,9 @@
-##Hi SerVme! 
+##Hi SerVme!
+ 
 Have a good day)
+
 ###Installation guide
+
 * `git clone git@github.com:albusss/servme.git`
 * `composer install`
 * `docker-compose build && docker-compose up`
