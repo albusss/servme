@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Entities\Category;
 use App\Entities\Todo;
 
 interface TodoServiceInterface
@@ -42,7 +41,6 @@ interface TodoServiceInterface
      * Create new entity.
      *
      * @param mixed[] $data
-     * @param \App\Entities\Category $category
      *
      * @return \App\Entities\Todo
      *
@@ -50,7 +48,7 @@ interface TodoServiceInterface
      * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \Exception
      */
-    public function create(array $data, Category $category): Todo;
+    public function create(array $data): Todo;
 
     /**
      * Delete entity.
@@ -64,6 +62,15 @@ interface TodoServiceInterface
      */
     public function delete(string $id): void;
 
+    /**
+     * List Todos
+     *
+     * @param mixed[] $criteries
+     *
+     * @return \App\Entities\Todo[]
+     *
+     * @throws \Exception
+     */
     public function list(array $criteries): array;
 
     /**

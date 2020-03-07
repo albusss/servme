@@ -12,9 +12,9 @@ final class TodoRepository extends AbstractRepository implements TodoRepositoryI
     {
         $queryBuilder = $this->createQueryBuilder('t');
 
-        if (isset($criteria['deadline'])) {
-            $queryBuilder->andWhere($queryBuilder->expr()->gte('t.deadline', ':deadline'));
-            $queryBuilder->setParameter('deadline', $criteria['deadline']);
+        if (isset($criteria['period']) && $criteria['period'] !== 'all') {
+            $queryBuilder->andWhere($queryBuilder->expr()->lt('t.deadline', ':deadline'));
+            $queryBuilder->setParameter('deadline', $this->calculatePeriod($criteria['period']));
         }
 
         if (isset($criteria['category'])) {
@@ -28,5 +28,24 @@ final class TodoRepository extends AbstractRepository implements TodoRepositoryI
         }
 
         return $queryBuilder->getQuery()->getResult();
+    }
+
+    /**
+     * Calculate period.
+     *
+     * @param string $period
+     *
+     * @return string
+     *
+     * @throws \Exception
+     */
+    private function calculatePeriod(string $period): string
+    {
+        if ($period === 'day') {
+            return (new \DateTime('+1 day'))->format('Y-m-d');
+        }
+        if ($period === 'month') {
+            return (new \DateTime('+1 month'))->format('Y-m-d');
+        }
     }
 }

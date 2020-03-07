@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Entities\Category;
 use App\Entities\Todo;
 use App\Repositories\CategoryRepositoryInterface;
 use App\Repositories\TodoRepositoryInterface;
@@ -49,14 +48,19 @@ final class TodoService implements TodoServiceInterface
     /**
      * {@inheritdoc}
      */
-    public function create(array $data, Category $category): Todo
+    public function create(array $data): Todo
     {
+        /** @var \App\Entities\Category $category */
+        $category = $this->categoryRepository->findOneBy(['name' => $data['category']]);
+
         $todo =
             (new Todo())
                 ->setName($data['name'])
+                ->setUser($this->currentUser)
                 ->setDescription($data['description'] ?? null)
                 ->setCategory($category)
                 ->setDeadline(new DateTime($data['deadline']))
+                ->setCreatedAt(new DateTime())
                 ->setStatus(self::STATUS_NEW);
 
         $this->todoRepository->saveAndFlush($todo);
@@ -112,11 +116,17 @@ final class TodoService implements TodoServiceInterface
     {
         $todo = $this->findTodoOrFail($id);
 
+        if (isset($data['category'])) {
+            $data['category'] = $this->categoryRepository->findOneBy(['name' => $data['category']]);
+        }
+
         $deadline = isset($data['deadline']) ? new DateTime($data['deadline']) : $todo->getDeadline();
         $todo
-            ->setName($input['name'] ?? $todo->getName())
-            ->setDescription($input['description'] ?? $todo->getDescription())
+            ->setName($data['name'] ?? $todo->getName())
+            ->setCategory($data['category'] ?? $todo->getCategory())
+            ->setDescription($data['description'] ?? $todo->getDescription())
             ->setDeadline($deadline)
+            ->setStatus($data['status'] ?? $todo->getStatus())
             ->setUpdatedAt(new DateTime());
 
         $this->todoRepository->saveAndFlush($todo);

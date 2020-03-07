@@ -11,6 +11,8 @@ interface TodoRepositoryInterface extends RepositoryInterface
      * @param mixed[] $criteria
      *
      * @return \App\Entities\Todo[]
+     *
+     * @throws \Exception
      */
     public function findByCriteria(array $criteria);
 }

@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\V1;
 
+use App\Entities\Category;
 use App\Http\Controllers\Controller;
-use App\Services\CategoryServiceInterface;
 use App\Services\TodoServiceInterface;
 use Illuminate\Contracts\Validation\Factory;
 use Illuminate\Http\Request;
@@ -31,10 +31,9 @@ final class TodoController extends Controller
     }
 
     /**
-     * Create new entity.
+     * Create new Todo.
      *
      * @param \Illuminate\Http\Request $request
-     * @param \App\Services\CategoryServiceInterface $categoryService
      *
      * @return \Illuminate\Http\Response
      *
@@ -42,21 +41,17 @@ final class TodoController extends Controller
      * @throws \Doctrine\ORM\OptimisticLockException
      * @throws \KamranAhmed\Faulty\Exceptions\BadRequestException
      */
-    public function create(
-        Request $request,
-        CategoryServiceInterface $categoryService
-    ): Response {
+    public function create(Request $request): Response
+    {
         $this->validateRequest($request->input(), $this->getCreateRules());
 
-        $category = $categoryService->retrieveOrcreate($request->input('category'));
-
-        $todo = $this->todoService->create($request->input(), $category);
+        $todo = $this->todoService->create($request->input());
 
         return new Response($todo->toArray(), 201);
     }
 
     /**
-     * Delete entity.
+     * Delete Todo.
      *
      * @param string $id
      *
@@ -73,6 +68,8 @@ final class TodoController extends Controller
     }
 
     /**
+     * List Todos
+     *
      * @param \Illuminate\Http\Request $request
      *
      * @return \Illuminate\Http\Response
@@ -89,7 +86,7 @@ final class TodoController extends Controller
     }
 
     /**
-     * Show entity.
+     * Show Todo.
      *
      * @param string $id
      *
@@ -103,7 +100,7 @@ final class TodoController extends Controller
     }
 
     /**
-     * Update Entity.
+     * Update Todo.
      *
      * @param \Illuminate\Http\Request $request
      * @param string $id
@@ -131,11 +128,13 @@ final class TodoController extends Controller
      */
     private function getCreateRules(): array
     {
+        $categoryClass = Category::class;
+
         return [
             'name' => 'required|string|max:60',
             'description' => 'sometimes|required|string|max:255',
             'deadline' => 'required|date|after:now',
-            'category' => 'required|string',
+            'category' => "required|string|exists:{$categoryClass},name",
         ];
     }
 
@@ -146,9 +145,11 @@ final class TodoController extends Controller
      */
     private function getListRules(): array
     {
+        $categoryClass = Category::class;
+
         return [
-            'category' => 'sometimes|required|string|exists:categories,name',
-            'deadline' => 'sometimes|required|date|after:now',
+            'category' => "sometimes|required|string|exists:{$categoryClass},name",
+            'period' => 'sometimes|required|string|in:day,month,all',
             'status' => 'sometimes|required|string|in:' . \implode(',', TodoServiceInterface::ALL_STATUSES),
         ];
     }
@@ -160,7 +161,10 @@ final class TodoController extends Controller
      */
     private function getUpdateRules(): array
     {
+        $categoryClass = Category::class;
+
         return [
+            'category' => "sometimes|required|string|exists:{$categoryClass},name",
             'name' => 'sometimes|required|string|max:60',
             'description' => 'sometimes|required|string|max:255',
             'deadline' => 'sometimes|required|date|after:now',
